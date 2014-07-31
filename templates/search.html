@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//underscorejs.org/underscore-min.js"></script>
+    <script type="text/javascript" src="//backbonejs.org/backbone-min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  </head>
+  <body class="container">
+    <div id="app-container">
+      <div class="form-group">
+        <input type="text" id="input-search" class="form-control" placeholder="keyword">
+        <input type="text" id="input-site" class="form-control" placeholder="site">
+        <input type="text" id="input-doc" class="form-control" placeholder="document type">
+      </div>
+      <button type="submit" id="submitQuery" class="btn btn-default">Submit</button>
+      <div class="alert alert-danger fade in" style="display:none;" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <p> No results found. </p>
+      </div>
+    </div>
+
+    <div id="search-container"></div>
+    <script type="text/template" id="search-template">
+      <div class="search-wrapper">
+        <div>
+          <a href= <%= source_url %>>Link</a>
+          <p> <%= _source.name %> </p>
+          <span> <%= _source.content[0].data %></span>
+        </div>
+      </div>
+    </script>
+    <script src="{{ url_for('static', filename='config.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
