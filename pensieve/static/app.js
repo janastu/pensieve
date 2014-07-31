@@ -1,5 +1,5 @@
 var S = window.S || {};
-(function(S, config) {
+(function(S) {
 
   var Result = Backbone.Model.extend({
     initialize: function(options) {
@@ -42,13 +42,14 @@ var S = window.S || {};
       var index = $("#input-site").val();
       var doc_type = $("#input-doc").val();
 
-      $.get(config.searchEngine+index+"/"+doc_type+"/_search?",
+      $.get("/search/"+index+"/"+doc_type+"?",
             {q: $("#input-search").val()}, function(data) {
               if(S.results.length){
                 S.results.reset();
               }
-              if(data.hits.total) {
-              S.results.add(data.hits.hits);
+              console.log(data);
+              if(data.total) {
+              S.results.add(data.hits);
               }
               else {
                 $(".alert").alert();
@@ -66,4 +67,4 @@ var S = window.S || {};
   new AppView;
   S.results = new Results();
   new ResultsView({collection: S.results});
-})(S, config);
+})(S);
