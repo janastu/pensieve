@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, make_response, jsonify
 from elasticsearch import Elasticsearch
 from urlparse import urlparse
+from flask_cors import cross_origin
 import requests
 
 app = Flask(__name__)
@@ -45,10 +46,14 @@ def search():
 
 
 @app.route("/search/<string:index>/<string:doc_type>", methods=['GET'])
+@cross_origin()
 def searchByParams(index, doc_type):
     es = Elasticsearch()
-    query = es.search(index, doc_type, q=request.args['q'])
+    query = es.search(index, doc_type, body={'query':
+                                             {'prefix':
+                                              {"_all": request.args['q']
+                                           }}})
     return jsonify(query['hits'])
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(host='127.0.0.1', port=5001, debug=True)
