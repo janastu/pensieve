@@ -55,5 +55,25 @@ def searchByParams(index, doc_type):
                                            }}})
     return jsonify(query['hits'])
 
+
+@app.route("/hits/<string:index>/<string:doc_type>")
+def getHits(index, doc_type):
+    es = Elasticsearch()
+    query_body = {"size": 0,
+                  "aggs":
+                  {"grouped_by":
+                   {
+                       "terms":
+                       {
+                           "field": request.args['field'],
+                           "size": 0
+                       }
+                   }
+               }
+              }
+    query = es.search(index, doc_type, body=query_body)
+    return jsonify(query['aggregations'])
+
+
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=5001, debug=True)
