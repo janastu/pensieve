@@ -57,6 +57,7 @@ def searchByParams(index, doc_type):
 
 
 @app.route("/hits/<string:index>/<string:doc_type>")
+@cross_origin()
 def getHits(index, doc_type):
     es = Elasticsearch()
     query_body = {"size": 0,
