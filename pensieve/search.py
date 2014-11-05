@@ -49,10 +49,17 @@ def search():
 @cross_origin()
 def searchByParams(index, doc_type):
     es = Elasticsearch()
-    query = es.search(index, doc_type, body={'query':
-                                             {'prefix':
-                                              {"_all": request.args['q']
-                                           }}})
+    if 'type' in request.args:
+        query = es.search(index, doc_type, body={'query':
+                                                 {'prefix':
+                                                  {request.args['type']:
+                                                   request.args['q']
+                                               }}})
+    else:
+        query = es.search(index, doc_type, body={'query':
+                                                 {'prefix':
+                                                  {"_all": request.args['q']
+                                               }}})
     return jsonify(query['hits'])
 
 
