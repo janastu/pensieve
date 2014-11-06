@@ -23,7 +23,7 @@ def createIndex():
             contents = requests.get(url + "pages").json()
             for content in contents:
                 es.index(index=urlparse(request.form['url']).netloc,
-                         doc_type="html", body=content)
+                         doc_type="html", body=content, id=content.id)
             response = make_response()
             response.data = "Website indexed."
             return response
@@ -38,6 +38,17 @@ def createIndex():
         response.status_code = 409
         response.data = {"reason": "Index already exists"}
         return response
+
+
+@app.route("/update/<string:index>/<string:doc_type>", methods=['POST'])
+@cross_origin
+def update(index, doc_type):
+    es = Elasticsearch()
+    es.index(index=index, doc_type=doc_type, content=request.form['content'],
+             id=request.form['id'])
+    response = make_response()
+    response.data = "Updated."
+    return response
 
 
 @app.route("/search")
