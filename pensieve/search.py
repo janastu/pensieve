@@ -23,7 +23,7 @@ def createIndex():
             contents = requests.get(url + "pages").json()
             for content in contents:
                 es.index(index=urlparse(request.form['url']).netloc,
-                         doc_type="html", body=content, id=content.id)
+                         doc_type="html", body=content, id=content['id'])
             response = make_response()
             response.data = "Website indexed."
             return response
