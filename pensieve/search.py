@@ -43,11 +43,13 @@ def createIndex():
         return response
 
 
-@app.route("/update/<string:index>/<string:doc_type>", methods=['POST'])
+@app.route("/update", methods=['POST'])
 @cross_origin
-def update(index, doc_type):
+def update():
     es = Elasticsearch()
-    es.index(index=index, doc_type=doc_type, content=request.form['content'],
+    es.index(index=request.form['index'],
+             doc_type=request.form['doc_type'],
+             content=request.form['content'],
              id=request.form['id'])
     response = make_response()
     response.data = "Updated."
