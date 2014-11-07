@@ -3,6 +3,7 @@ from elasticsearch import Elasticsearch
 from urlparse import urlparse
 from flask_cors import cross_origin
 from logging import FileHandler
+import json
 import logging
 import requests
 import os
@@ -49,7 +50,7 @@ def update():
     es = Elasticsearch()
     es.index(index=request.form['index'],
              doc_type=request.form['doc_type'],
-             body=request.form['content'],
+             body=json.loads(request.form['content']),
              id=request.form['id'])
     response = make_response()
     response.data = "Updated."
