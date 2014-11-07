@@ -2,7 +2,10 @@ from flask import Flask, render_template, request, make_response, jsonify
 from elasticsearch import Elasticsearch
 from urlparse import urlparse
 from flask_cors import cross_origin
+from logging import FileHandler
+import logging
 import requests
+import os
 
 app = Flask(__name__)
 
@@ -92,6 +95,11 @@ def getHits(index, doc_type):
               }
     query = es.search(index, doc_type, body=query_body)
     return jsonify(query['aggregations'])
+
+
+fil = FileHandler(os.path.join(os.path.dirname(__file__), 'logme'), mode='a')
+fil.setLevel(logging.ERROR)
+app.logger.addHandler(fil)
 
 
 if __name__ == "__main__":
