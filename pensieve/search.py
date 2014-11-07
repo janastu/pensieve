@@ -44,7 +44,7 @@ def createIndex():
 
 
 @app.route("/update", methods=['POST'])
-@cross_origin
+@cross_origin()
 def update():
     es = Elasticsearch()
     es.index(index=request.form['index'],
