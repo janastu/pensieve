@@ -49,7 +49,7 @@ def update():
     es = Elasticsearch()
     es.index(index=request.form['index'],
              doc_type=request.form['doc_type'],
-             content=request.form['content'],
+             body=request.form['content'],
              id=request.form['id'])
     response = make_response()
     response.data = "Updated."
