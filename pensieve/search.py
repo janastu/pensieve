@@ -16,8 +16,15 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/index', methods=['POST'])
+@app.route('/index/mouchak', methods=['POST'])
 def createIndex():
+    """This endpoint should be used to index pages of a Mouchak installation.
+    FIXME:
+    - Endpoint is only accessible from the index page of search service.
+    - Does not support cross origin requests.
+    - Better name for the function.
+
+    """
     es = Elasticsearch()
     if not es.indices.exists(urlparse(request.form['url']).netloc):
         url = request.form['url']
@@ -34,8 +41,6 @@ def createIndex():
         except:
             response = make_response()
             response.status_code = 204
-            # response.mimetype = "application/json"
-            # response.data = {"reason": "No content found."}
             return response
     else:
         response = make_response()
@@ -43,6 +48,31 @@ def createIndex():
         response.data = {"reason": "Index already exists"}
         return response
 
+
+@app.route('/index/content', methods=['POST'])
+@cross_origin()
+def indexContent():
+    """API to index data from sources other than Mouchak.  Accepts list of key
+    value pairs. The list is a value for a key named records.
+
+    """
+    es = Elasticsearch()
+    data = request.get_json()
+    url = data.get('url')
+    if not url.endswith('/'):
+        url = url + '/'
+    try:
+        contents = data.get('records')
+        for record in contents:
+            es.index(index=urlparse(url).netloc,
+                     doc_type="json", body=record)
+        response = make_response()
+        response.data = "Data indexed."
+        return response
+    except:
+        response = make_response()
+        response.status_code = 500
+        return response
 
 @app.route("/update", methods=['POST'])
 @cross_origin()
