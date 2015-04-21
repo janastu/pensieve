@@ -13,7 +13,7 @@
   </div>
   <script type="text/javascript">
     $("#submit-btn").on("click", function(e) {
-    $.post("/index", {url: $("#url-field").val() }, function(data) {
+    $.post("/index/mouchak", {url: $("#url-field").val() }, function(data) {
     if(data) {
     $("#submit-btn").addClass("btn-success");
     }
