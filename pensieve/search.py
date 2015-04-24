@@ -103,10 +103,9 @@ def searchByParams(index, doc_type):
                                                    request.args['q']
                                                }}})
     else:
-        query = es.search(index, doc_type, body={'query':
-                                                 {'prefix':
-                                                  {"_all": request.args['q']
-                                               }}})
+        query = es.search(index, doc_type, q = request.args.get('q'),
+                          default_operator = 'AND')
+
     return jsonify(query['hits'])
 
 
