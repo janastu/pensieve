@@ -74,6 +74,7 @@ def indexContent():
         response.status_code = 500
         return response
 
+
 @app.route("/update", methods=['POST'])
 @cross_origin()
 def update():
@@ -96,15 +97,17 @@ def search():
 @cross_origin()
 def searchByParams(index, doc_type):
     es = Elasticsearch()
+    start = request.args.get('from') or 0
+    size = request.args.get('size') or 10
     if 'type' in request.args:
         query = es.search(index, doc_type, body={'query':
                                                  {'prefix':
                                                   {request.args['type']:
-                                                   request.args['q']
-                                               }}})
+                                                   request.args['q']}}},
+                          from_=start, size=size)
     else:
-        query = es.search(index, doc_type, q = request.args.get('q'),
-                          default_operator = 'AND')
+        query = es.search(index, doc_type, q=request.args.get('q'),
+                          default_operator='AND', size=size, from_=start)
 
     return jsonify(query['hits'])
 
@@ -121,10 +124,7 @@ def getHits(index, doc_type):
                        {
                            "field": request.args['field'],
                            "size": 0
-                       }
-                   }
-               }
-              }
+                       }}}}
     query = es.search(index, doc_type, body=query_body)
     return jsonify(query['aggregations'])
 
